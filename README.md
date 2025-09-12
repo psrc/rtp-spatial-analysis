@@ -3,7 +3,11 @@
 
 1. Activate it with `conda activate rtp_spatial_analysis`
 
-1. Then install _psrcelmerpy_ with `pip install git+https://github.com/psrc/psrcelmerpy.git`
+1. Install _psrcelmerpy_ with `pip install git+https://github.com/psrc/psrcelmerpy.git`
+
+1. In _/configs/config.yaml_, change the `rtp_transit_data_path` value to the appropriate subfolder in your OneDrive.
+
+1. In _/.vscode/launch.json_, change _configurations[args]_ to the full path to your _configs_ folder.
 
 ## Development Notes
 **Spatial Analysis Needs for RTP**  
