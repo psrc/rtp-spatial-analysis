@@ -1,3 +1,11 @@
+## Initial Setup
+1. Set up your anaconda environment with `conda env create -f environment.yml`
+
+1. Activate it with `conda activate rtp_spatial_analysis`
+
+1. Then install _psrcelmerpy_ with `pip install git+https://github.com/psrc/psrcelmerpy.git`
+
+## Development Notes
 **Spatial Analysis Needs for RTP**  
 The spatial analysis below will be run on the 2035 and 2050 final networks. For initial development, we will use Scenario 2b for 2050.
 
