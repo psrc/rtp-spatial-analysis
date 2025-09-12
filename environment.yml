@@ -81,6 +81,7 @@ dependencies:
   - pip=25.2=pyhc872135_0
   - pixman=0.46.4=h4043f72_0
   - proj=9.3.1=h4c8f42b_1
+  - pyaml=25.5.0=py313hdf80283_0
   - pycparser=2.23=py313haa95532_0
   - pyogrio=0.10.0=py313h10c4007_1
   - pyparsing=3.2.0=py313haa95532_0
@@ -91,6 +92,7 @@ dependencies:
   - python-tzdata=2025.2=pyhd3eb1b0_0
   - python_abi=3.13=1_cp313
   - pytz=2025.2=py313haa95532_0
+  - pyyaml=6.0.2=py313h827c3e9_0
   - requests=2.32.5=py313haa95532_0
   - scikit-learn=1.7.1=py313hd8cff78_0
   - scipy=1.16.0=py313h242c13b_0
@@ -113,6 +115,7 @@ dependencies:
   - xerces-c=3.2.4=hd77b12b_1
   - xyzservices=2022.9.0=py313haa95532_1
   - xz=5.6.4=h4754444_1
+  - yaml=0.2.5=he774522_0
   - zlib=1.3.1=h02ab6af_0
   - zstd=1.5.6=h8880b57_0
-prefix: C:\Users\cpeak\Anaconda3\envs\rtp-spatial-analysis
+prefix: C:\Users\cpeak\Anaconda3\envs\rtp_spatial_analysis
