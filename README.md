@@ -7,8 +7,6 @@
 
 1. In _/configs/config.yaml_, change the `rtp_transit_data_path` value to the appropriate subfolder in your OneDrive.
 
-1. In _/.vscode/launch.json_, change _configurations[args]_ to the full path to your _configs_ folder.
-
 ## Development Notes
 **Spatial Analysis Needs for RTP**  
 The spatial analysis below will be run on the 2035 and 2050 final networks. For initial development, we will use Scenario 2b for 2050.
