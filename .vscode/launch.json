@@ -11,7 +11,7 @@
             "request": "launch",
             "program": "rtp_spatial_analysis/src/run.py",
             "console": "integratedTerminal",
-            "args": ["-c", "C:/Users/cpeak/Repos/rtp-spatial-analysis/rtp_spatial_analysis/configs"]
+            "args": ["-c", "rtp_spatial_analysis/configs"]
         }
     ]
 }
