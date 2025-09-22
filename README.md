@@ -5,7 +5,7 @@
 
 1. Install _psrcelmerpy_ with `pip install git+https://github.com/psrc/psrcelmerpy.git`
 
-1. In _/configs/config.yaml_, change the `rtp_transit_data_path` value to the appropriate subfolder in your OneDrive.
+1. In _/configs/config.yaml_, change the `user_onedrive` value to the appropriate path to your OneDrive folder "Puget Sound Regional Council".
 
 ## Development Notes
 **Spatial Analysis Needs for RTP**  

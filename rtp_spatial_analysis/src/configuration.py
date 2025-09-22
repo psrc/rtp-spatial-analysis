@@ -12,7 +12,9 @@ def add_run_args(parser, multiprocess=True):
                         help='path to configs dir')
 
 
+
 # if __name__ == '__main__':
 parser = argparse.ArgumentParser()
 add_run_args(parser)
+# add_user_args(parser)
 args = parser.parse_args()
