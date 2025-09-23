@@ -19,9 +19,10 @@ def combine_layers(line_layer, hex_layer):
     intersected = intersect_layers(buffered_gdf, hex_layer)
     return intersected
 
-def export_shp(gdf):
+def export_shp(gdf, config):
     """export to a pre-defined file location"""
-    pth = Path("C:/Users/cpeak/temp/rtp_spatial_analysis_exports/out_shape.shp")
+    path_to_output = f"{config['user_onedrive']}/{config['rtp_output_path']}"
+    pth = Path(path_to_output, "out_shape.shp")
     gdf.to_file(pth)
 
 def run(config):
@@ -38,6 +39,6 @@ def run(config):
 
     combined_gdf = combine_layers(fgtswa, activity_units_2050)
 
-    export_shp(combined_gdf)
+    export_shp(combined_gdf, config)
     print(combined_gdf)
     print("done")
