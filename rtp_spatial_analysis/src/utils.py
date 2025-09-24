@@ -22,3 +22,8 @@ def points_in_polygon(points_gdf, polygons_gdf, col_name, buffer=0):
     points_gdf[col_name] = intersects
     return points_gdf
 
+def export_layer(gdf, config, lyr_nm):
+    """export to a pre-defined file location"""
+    path_to_output = f"{config['user_onedrive']}/{config['rtp_output_path']}"
+    pth = Path(path_to_output, lyr_nm)
+    gdf.to_file(pth)
