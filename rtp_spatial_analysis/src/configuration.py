@@ -8,7 +8,7 @@ def add_run_args(parser, multiprocess=True):
     parser.add_argument('-c', '--configs_dir',
                         type=Path,
                         metavar='PATH',
-                        default=Path(__file__).absolute().parent,
+                        default=Path(__file__).absolute().parent.parent / 'configs',
                         help='path to configs dir')
 
 
