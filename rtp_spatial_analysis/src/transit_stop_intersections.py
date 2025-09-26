@@ -4,13 +4,18 @@ import psrcelmerpy
 from pathlib import Path 
 import utils
 
-list_transit_type = ['local', 'all_day', 'frequent', 'hct', 'brt']
-list_efa = ['equity_focus_areas_2023__efa_poc',
-            'equity_focus_areas_2023__efa_pov200',
-            'equity_focus_areas_2023__efa_lep',
-            'equity_focus_areas_2023__efa_youth',
-            'equity_focus_areas_2023__efa_older',
-            'equity_focus_areas_2023__efa_dis']
+transit_supportive_density = {'local':7,
+                              'all_day':15,
+                              'frequent':25,
+                              'hct':40,
+                              'brt':15}
+
+# list_efa = ['equity_focus_areas_2023__efa_poc',
+#             'equity_focus_areas_2023__efa_pov200',
+#             'equity_focus_areas_2023__efa_lep',
+#             'equity_focus_areas_2023__efa_youth',
+#             'equity_focus_areas_2023__efa_older',
+#             'equity_focus_areas_2023__efa_dis']
 
 def export_csv(df, config, file_nm):
     """export to a pre-defined file location"""
@@ -20,25 +25,24 @@ def export_csv(df, config, file_nm):
 
 def get_service_au(config, buffered_stops, col_suffix):
 
-    supportive_density = 30
-
     gdf = utils.get_onedrive_layer(config, 'activity_units_path', 'peope_and_jobs_2050')
     gdf = gdf.to_crs(2285)
-    # number of people and jobs that are in supportive densities
-    gdf_au = gdf[gdf['density']>=supportive_density]
 
     sum_fields = ['sum_pop_20', 'sum_jobs_2', 'sum_au_205']
-    total_au = gdf_au[sum_fields].sum().to_list()
     data = {}
 
-    for type in list_transit_type:
+    for key, density in transit_supportive_density.items():
 
-        transit_by_type = buffered_stops[buffered_stops[type]>0]
+        # number of people and jobs that are in supportive densities
+        gdf_au = gdf[gdf['au_acre']>=density]
+        total_au = gdf_au[sum_fields].sum().to_list()
+
+        transit_by_type = buffered_stops[buffered_stops[key]>0]
         gdf = gpd.clip(gdf_au, transit_by_type)
 
         _list = gdf[sum_fields].sum().to_list()
         _list_without = [total_au[i] - _list[i] for i in range(len(_list))]
-        data[type + col_suffix] = _list +_list_without
+        data[key + col_suffix] = _list +_list_without
     
     df = pd.DataFrame.from_dict(data, orient='index', columns=['people with service', 'jobs with service', 'activity units with service',
                                                                'people w/o service', 'jobs w/o service', 'activity units w/o service'])
@@ -62,7 +66,7 @@ def run(config):
     test2 = get_service_au(config, buf4_transit_stops_2050, '_quarter_mi')
     df_service_dense = pd.concat([test, test2])
 
-    # export_csv(df_service_dense, config, "transit_stops_density_intersect.csv")
+    export_csv(df_service_dense, config, "transit_stops_density_intersect.csv")
 
     # 2. Intersection of transit stops and Equity Focus Areas ----
     # Load blocks layer from ElmerGeo
