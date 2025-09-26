@@ -17,12 +17,6 @@ transit_supportive_density = {'local':7,
 #             'equity_focus_areas_2023__efa_older',
 #             'equity_focus_areas_2023__efa_dis']
 
-def export_csv(df, config, file_nm):
-    """export to a pre-defined file location"""
-    path_to_output = f"{config['user_onedrive']}/{config['rtp_output_path']}"
-    pth = Path(path_to_output,file_nm)
-    df.to_csv(pth)
-
 def get_service_au(config, buffered_stops, col_suffix):
 
     gdf = utils.get_onedrive_layer(config, 'activity_units_path', 'peope_and_jobs_2050')
@@ -66,7 +60,7 @@ def run(config):
     test2 = get_service_au(config, buf4_transit_stops_2050, '_quarter_mi')
     df_service_dense = pd.concat([test, test2])
 
-    export_csv(df_service_dense, config, "transit_stops_density_intersect.csv")
+    utils.export_csv(df_service_dense, config, "transit_stops_density_intersect.csv")
 
     # 2. Intersection of transit stops and Equity Focus Areas ----
     # Load blocks layer from ElmerGeo
