@@ -1,6 +1,6 @@
 
-run_demo: true
-run_density_and_freight: false
+run_demo: false
+run_density_and_freight: true
 run_transit_stop_intersections: false
 
 # rtp_transit_data_path: C:/Users/cpeak/Puget Sound Regional Council/GIS - Sharing/Projects/Transportation/RTP_2026/transit
@@ -13,3 +13,4 @@ fgtswa_path: /GIS - Sharing/Projects/Transportation/RTP_2026/freight/FGTSWA.gdb
 rtp_output_path: /GIS - Sharing/Projects/Transportation/RTP_2026/future_system_output
 
 mile_in_ft: 5280
+acre_in_sqft: 43560
