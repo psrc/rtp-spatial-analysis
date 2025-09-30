@@ -53,7 +53,7 @@ def export_csv(df, config, file_nm):
     """export to a pre-defined file location"""
     path_to_output = f"{config['user_onedrive']}/{config['rtp_output_path']}"
     pth = Path(path_to_output,file_nm)
-    df.to_csv(pth)
+    df.to_csv(pth, index=False)
 
 def get_onedrive_layer(config, path_name, layer):
     """
