@@ -1,9 +1,15 @@
 
-run_demo: false
-run_density_and_freight: true
+run_demo: true
+run_density_and_freight: false
+run_transit_stop_intersections: false
 
+# rtp_transit_data_path: C:/Users/cpeak/Puget Sound Regional Council/GIS - Sharing/Projects/Transportation/RTP_2026/transit
 rtp_transit_data_path: /GIS - Sharing/Projects/Transportation/RTP_2026/transit
+rtp_transit_network_path: /GIS - Sharing/Projects/Transportation/RTP_2026/transit/Transit_Network_2050_Scenario2b.gdb
+rtp_efa_path: /GIS - Sharing/Projects/Transportation/RTP_2026/equity_focus_areas/efa_3groupings_1SD/equity_focus_areas_2023_acs.gdb
 activity_units_path: /GIS - Sharing/Projects/Transportation/RTP_2026/activity_units/Activity_Units_2026_RTP.gdb
 fgtswa_path: /GIS - Sharing/Projects/Transportation/RTP_2026/freight/FGTSWA.gdb
 
 rtp_output_path: /GIS - Sharing/Projects/Transportation/RTP_2026/future_system_output
+
+mile_in_ft: 5280
