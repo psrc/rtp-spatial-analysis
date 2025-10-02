@@ -5,18 +5,6 @@ from pathlib import Path
 import utils
 
 
-def export_shp(gdf):
-    """export to a pre-defined file location"""
-
-    try:
-        pth = Path("C:/Users/cpeak/temp/rtp_spatial_analysis_exports/out_shape.shp")
-        gdf.to_file(pth)
-
-    except Exception as e:
-        print(f"Error in export_shp: {e}")
-        raise
-
-
 def run(config):
     """
     Create a layer of signals with accessible pedestrian signals 
