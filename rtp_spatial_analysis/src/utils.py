@@ -86,9 +86,10 @@ def get_onedrive_layer(config, path_name, layer):
     
     """
     try:
+        crs = config['epsg_crs']
         f_path = f"{config['user_onedrive']}/{config[path_name]}"
         gdb = gpd.read_file(Path(f_path), layer=layer)
-        gdb = gdb.to_crs(2286)
+        gdb = gdb.to_crs(crs)
         return(gdb)
     except Exception as e:
         print(f"Error in get_onedrive_layer: {e}")

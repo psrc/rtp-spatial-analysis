@@ -17,6 +17,7 @@ rtp_output_gdb_name: future_system_output.gdb
 
 mile_in_ft: 5280
 acre_in_sqft: 43560
+epsg_crs: 2285
 
 equity_geog_dict:
   equity_focus_areas_2023__efa_poc: "People of Color"
