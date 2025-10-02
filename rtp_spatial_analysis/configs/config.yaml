@@ -1,8 +1,11 @@
 
 run_demo: false
-run_density_and_freight: true
+run_density_and_freight: false
+
+run_frequent_transit_routes_and_signal: true
 
 rtp_transit_data_path: /GIS - Sharing/Projects/Transportation/RTP_2026/transit
+rtp_its_signals_path: /GIS - Sharing/Projects/Transportation/RTP_2026/its
 activity_units_path: /GIS - Sharing/Projects/Transportation/RTP_2026/activity_units/Activity_Units_2026_RTP.gdb
 fgtswa_path: /GIS - Sharing/Projects/Transportation/RTP_2026/freight/FGTSWA.gdb
 

@@ -11,7 +11,7 @@
             "request": "launch",
             "program": "rtp_spatial_analysis/src/run.py",
             "console": "integratedTerminal",
-            "args": ["-c", "rtp_spatial_analysis/configs"]
+            "args": ["-c", "C:/Users/ONg/RTP_Spatial_Analysis/rtp-spatial-analysis/rtp_spatial_analysis/configs"]
         }
     ]
 }
