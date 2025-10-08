@@ -2,8 +2,6 @@ import geopandas as gpd
 import psrcelmerpy
 from pathlib import Path 
 
-
-
 def buffer_layer(layer_gdf, distance):
 
     try:
