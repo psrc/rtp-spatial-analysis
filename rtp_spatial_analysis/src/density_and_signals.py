@@ -10,7 +10,10 @@ def run(config):
     Create a layer of signals with accessible pedestrian signals 
     that are within high-density activity unit hex's (defined as activity units per acre > 25)
     
-    Output: A layer in a geodatabase
+    Output: 
+        A layer 'accessible_ped_signals_in_dense_areas' in a geodatabase
+        A crosstab summary table in CSV form, showing the counts of signals
+            by accessible pedestrian signal status by density status
     """
 
     try:
