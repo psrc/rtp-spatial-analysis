@@ -3,6 +3,7 @@ import psrcelmerpy
 from pathlib import Path 
 import utils
 import fiona
+import pandas as pd
 
 def combine_layers(line_layer, hex_layer):
     """buffer a polyline layer and intersect it with hex_layer"""
@@ -23,7 +24,7 @@ def run(config):
     transit_routes_frequent = transit_routes[transit_routes['frequent'] == 1]
     transit_routes_frequent = transit_routes_frequent.to_crs(2285)
     print(transit_routes_frequent)
-    print ('transit routes done')
+    print ('transit routes done') 
 
     layers = fiona.listlayers("C:/Users/ONg/PSRC/GIS - Sharing/Projects/Transportation/RTP_2026/its/ITS_Signals_2024_Final.gdb")
     print(layers)
@@ -39,7 +40,26 @@ def run(config):
     # combining frequent transit routes and signals #
     signals_on_routes = gpd.sjoin(signals, transit_routes_frequent, how="inner", predicate="intersects")
     signals_on_routes = signals_on_routes.drop_duplicates(subset=signals.columns)
-    signals_on_routes = signals_on_routes.groupby(['tsp']).first().reset_index()
+
+    num_yes_tsp = (signals_on_routes['tsp'] == 'Yes').sum()
+    num_no_tsp = (signals_on_routes['tsp'] == 'No').sum()
+    count_rows(num_yes_tsp, num_no_tsp, 'tsp_counts.csv')
+
+    num_yes_ped = (signals_on_routes['ped_signal'] == 'Yes').sum()
+    num_no_ped = (signals_on_routes['ped_signal'] == 'No').sum()
+    count_rows(num_yes_ped, num_no_ped, 'ped_signal_counts.csv')
+   
+
     utils.export_layer(signals_on_routes, config, "frequent_transit_routes_and_signal.shp")
     utils.export_csv(signals_on_routes, config, "frequent_transit_routes_and_signal.csv")
     print(signals_on_routes)
+
+def count_rows(num_yes, num_no, file_path):
+    base_dir = Path('C:/Users/ONg/PSRC/GIS - Sharing/Projects/Transportation/RTP_2026/future_system_output/frequent_transit_routes_signals_output')
+    full_path = base_dir/file_path
+    counts_df = pd.DataFrame({
+        'tsp': ['yes', 'no'],
+        'count': [num_yes, num_no]
+    })
+    # Export to CSV
+    counts_df.to_csv(full_path, index=False)
