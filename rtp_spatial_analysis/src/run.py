@@ -3,6 +3,7 @@ import yaml
 from pathlib import Path
 import demo
 import density_and_freight
+import congestion_measures
 
 file = Path().joinpath(configuration.args.configs_dir, "config.yaml")
 
@@ -14,3 +15,6 @@ if config['run_demo']:
     
 if config['run_density_and_freight']:
     density_and_freight.run(config)
+
+if config['run_congestion_measures']:
+    congestion_measures.run(config)   
