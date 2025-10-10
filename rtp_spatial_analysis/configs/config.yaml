@@ -18,3 +18,12 @@ rtp_output_path: /GIS - Sharing/Projects/Transportation/RTP_2026/future_system_o
 
 mile_in_ft: 5280
 acre_in_sqft: 43560
+epsg_crs: 2285
+
+equity_geog_dict:
+  equity_focus_areas_2023__efa_poc: "People of Color"
+  equity_focus_areas_2023__efa_pov200: "Income"
+  equity_focus_areas_2023__efa_lep: "LEP"
+  equity_focus_areas_2023__efa_dis: "Disability"
+  equity_focus_areas_2023__efa_older: "Older Adults"
+  equity_focus_areas_2023__efa_youth: "Youth"

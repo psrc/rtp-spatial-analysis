@@ -49,11 +49,11 @@ def export_layer(gdf, config, lyr_nm):
         raise
 
 
-def export_csv(df, config, file_nm):
+def export_csv(df, config, file_nm, index=False):
     """export to a pre-defined file location"""
     path_to_output = f"{config['user_onedrive']}/{config['rtp_output_path']}"
     pth = Path(path_to_output,file_nm)
-    df.to_csv(pth, index=False)
+    df.to_csv(pth, index=index)
 
 def get_onedrive_layer(config, path_name, layer):
     """
@@ -76,9 +76,10 @@ def get_onedrive_layer(config, path_name, layer):
     
     """
     try:
+        crs = config['epsg_crs']
         f_path = f"{config['user_onedrive']}/{config[path_name]}"
         gdb = gpd.read_file(Path(f_path), layer=layer)
-        gdb = gdb.to_crs(2286)
+        gdb = gdb.to_crs(crs)
         return(gdb)
     except Exception as e:
         print(f"Error in get_onedrive_layer: {e}")
