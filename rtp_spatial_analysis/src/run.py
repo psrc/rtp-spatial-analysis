@@ -5,6 +5,7 @@ import demo
 import density_and_freight
 import transit_stop_intersections
 import getpass
+import congestion_measures
 
 file = Path().joinpath(configuration.args.configs_dir, "config.yaml")
 
@@ -20,3 +21,6 @@ if config['run_density_and_freight']:
 if config['run_transit_stop_intersections']:
     transit_stop_intersections.run(config)
 
+
+if config['run_congestion_measures']:
+    congestion_measures.run(config)   

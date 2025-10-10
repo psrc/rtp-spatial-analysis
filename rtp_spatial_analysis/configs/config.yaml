@@ -2,6 +2,7 @@
 run_demo: false
 run_density_and_freight: true
 run_transit_stop_intersections: false
+run_congestion_measures: true
 
 # rtp_transit_data_path: C:/Users/cpeak/Puget Sound Regional Council/GIS - Sharing/Projects/Transportation/RTP_2026/transit
 rtp_transit_data_path: /GIS - Sharing/Projects/Transportation/RTP_2026/transit
@@ -23,3 +24,4 @@ equity_geog_dict:
   equity_focus_areas_2023__efa_dis: "Disability"
   equity_focus_areas_2023__efa_older: "Older Adults"
   equity_focus_areas_2023__efa_youth: "Youth"
+2050_model_run_path: N:/rtp_2026_2050/scenarios_for_sept/sc_constrained_2050/soundcast
