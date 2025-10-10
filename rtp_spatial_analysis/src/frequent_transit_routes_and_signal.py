@@ -39,6 +39,7 @@ def run(config):
     # combining frequent transit routes and signals #
     signals_on_routes = gpd.sjoin(signals, transit_routes_frequent, how="inner", predicate="intersects")
     signals_on_routes = signals_on_routes.drop_duplicates(subset=signals.columns)
+    signals_on_routes = signals_on_routes.groupby(['tsp']).first().reset_index()
     utils.export_layer(signals_on_routes, config, "frequent_transit_routes_and_signal.shp")
     utils.export_csv(signals_on_routes, config, "frequent_transit_routes_and_signal.csv")
     print(signals_on_routes)
