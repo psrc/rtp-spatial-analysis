@@ -5,8 +5,6 @@
 
 1. Install _psrcelmerpy_ with `pip install git+https://github.com/psrc/psrcelmerpy.git`
 
-1. In _/configs/config.yaml_, change the `user_onedrive` value to the appropriate path to your OneDrive folder "Puget Sound Regional Council".
-
 ## Development Notes
 **Spatial Analysis Needs for RTP**  
 The spatial analysis below will be run on the 2035 and 2050 final networks. For initial development, we will use Scenario 2b for 2050.
