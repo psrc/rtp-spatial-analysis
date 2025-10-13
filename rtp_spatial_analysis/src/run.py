@@ -11,7 +11,14 @@ import paratransit_bnd
 file = Path().joinpath(configuration.args.configs_dir, "config.yaml")
 
 config = yaml.safe_load(open(file))
-config['user_onedrive'] = Path().joinpath("C:/Users/", getpass.getuser(), "PSRC")
+
+
+if Path().joinpath("C:/Users/", getpass.getuser(), "PSRC").exists():
+    config['user_onedrive'] = Path().joinpath("C:/Users/", getpass.getuser(), "PSRC")
+elif Path().joinpath("C:/Users/", getpass.getuser(), "Puget Sound Regional Council").exists():
+    config['user_onedrive'] = Path().joinpath("C:/Users/", getpass.getuser(), "Puget Sound Regional Council")
+else:   
+    print ("OneDrive path not found")
 
 if config['run_demo']:
     demo.run(config)
