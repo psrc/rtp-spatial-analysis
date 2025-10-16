@@ -10,32 +10,69 @@ transit_supportive_density = {'local':7,
                               'hct':40,
                               'brt':15}
 
-def get_service_au(config, buffered_stops, buffer_name):
+def cal_service_area_stat(df_total, df_within, pct_col_names):
+    """
+    get population or activity units within service area, outside service area, and percentage
+    """
+
+    df_outside = df_total - df_within
+    # percentage
+    within_percent = df_within/df_total
+    within_percent.columns = pct_col_names
+    outside_percent = df_outside/df_total
+    outside_percent.columns = pct_col_names
+    ## total percent should all be 1
+    total_percent = df_total/df_total
+    total_percent.columns = pct_col_names
+
+    within_all = pd.concat([df_within, within_percent], axis=1)
+    within_all['Area'] = "Inside Buffered TRS"
+    outside_all = pd.concat([df_outside, outside_percent], axis=1)
+    outside_all['Area'] = "Outside Buffered TRS"
+    total_all = pd.concat([df_total, total_percent], axis=1)
+    total_all['Area'] = "Total"
+
+    df = pd.concat([within_all, outside_all, total_all])
+    
+    # formatting
+    df[df_within.columns] = df[df_within.columns].round(1)
+    df[pct_col_names] = df[pct_col_names].map(lambda x: f'{x:.1%}')
+
+    return df
+
+def result_au_service(config, buffered_stops, buffer_name):
 
     gdf = utils.get_onedrive_layer(config, 'activity_units_path', 'peope_and_jobs_2050')
     gdf = gdf.to_crs(2285)
 
     sum_fields = ['sum_pop_20', 'sum_jobs_2', 'sum_au_205']
+    total_col = ['population', 'jobs', 'activity_units'] 
+    pct_cols = [i + '_pct' for i in total_col]
     data = {}
 
     for key, density in transit_supportive_density.items():
 
         # number of people and jobs that are in supportive densities
         gdf_au = gdf[gdf['au_acre']>=density]
-        total_au = gdf_au[sum_fields].sum().to_list()
+        total_au = gdf_au.groupby('county', observed=False)[sum_fields].sum()
+        total_au.columns = total_col
 
         transit_by_type = buffered_stops[buffered_stops[key]>0]
         # gdf = gpd.clip(gdf_au, transit_by_type)
         gdf = gpd.clip(gdf_au, transit_by_type)
+        df = gdf.drop(columns=['geometry'])
 
-        _list = gdf[sum_fields].sum().to_list()
-        _list_without = [total_au[i] - _list[i] for i in range(len(_list))]
-        data[key] = _list +_list_without
+        within = df.groupby('county', observed=False)[sum_fields].sum().fillna(0)
+        within.columns = total_col
+        # get activity units inside, outside, and total with percentage
+        data[key] = cal_service_area_stat(total_au, within, pct_cols)
     
-    df = pd.DataFrame.from_dict(data, orient='index', columns=['people with service', 'jobs with service', 'activity units with service',
-                                                               'people w/o service', 'jobs w/o service', 'activity units w/o service'])
-    df = df.rename_axis('Route Type')
+    # create final dataframe from data dictionary
+    df = pd.concat(data.values(),
+                   keys=data.keys(),
+                   names=['Route Type']).reset_index()
     df['Buffer'] = buffer_name
+    df = df[['county', 'Route Type', 'Buffer', 'Area'] + total_col + pct_cols].copy()
 
     return df
 
@@ -80,7 +117,8 @@ def get_parcel_with_efa_pop(config):
 
     return(gdf_parcel_efa)
 
-def get_pop_service_efa(config, parcel, buffered_stops, buffer_name):
+
+def result_efa_pop_service(parcel, buffered_stops, buffer_name):
 
     # list of efa column names
     efa_pop_cols = parcel.columns[parcel.columns.str.endswith('efa_pop')]
@@ -101,40 +139,18 @@ def get_pop_service_efa(config, parcel, buffered_stops, buffer_name):
         df = gdf.drop(columns=['geometry'])
         # total population in each efa with/without service
         within = df.groupby('county_name', observed=False)[efa_pop_cols].sum().fillna(0)
-        without = efa_total_pop - within
-        # percentage
-        within_percent = within/efa_total_pop
-        within_percent.columns = pct_cols
-        without_percent = without/efa_total_pop
-        without_percent.columns = pct_cols
-        ## total percent should all be 1
-        total_percent = efa_total_pop/efa_total_pop
-        total_percent.columns = pct_cols
-
-        within_all = pd.concat([within, within_percent], axis=1)
-        within_all['Area'] = "Inside Buffered TRS"
-        without_all = pd.concat([without, without_percent], axis=1)
-        without_all['Area'] = "Outside Buffered TRS"
-        total_all = pd.concat([efa_total_pop, total_percent], axis=1)
-        total_all['Area'] = "Total"
-
-        df = pd.concat([within_all, without_all, total_all])
-
-        data[key] = df
+        # get population inside, outside, and total with percentage
+        data[key] = cal_service_area_stat(efa_total_pop, within, pct_cols)
 
     # create final dataframe from data dictionary
     df = pd.concat(data.values(),
                    keys=data.keys(),
                    names=['Route Type']).reset_index()
     df['Buffer'] = buffer_name
-    df = df[['county_name', 'Route Type', 'Buffer', 'Area'] + efa_pop_cols.tolist() + pct_cols]
-
-    # formatting
-    df[efa_pop_cols] = df[efa_pop_cols].round(1)
-    df[pct_cols] = df[pct_cols].map(lambda x: f'{x:.1%}')
+    df = df[['county_name', 'Route Type', 'Buffer', 'Area'] + efa_pop_cols.tolist() + pct_cols].copy()
 
     return df
-    
+
 def run(config):
 
     # 2050 Transit Stops
@@ -147,18 +163,18 @@ def run(config):
     
     # 1. Intersection of transit stops and future density ----
     # get number of people and jobs that are in supportive densities with service and in those in supportive densities without service (Gap)
-    df1 = get_service_au(config, buf2_transit_stops_2050, 'half mile')
-    df2 = get_service_au(config, buf4_transit_stops_2050, 'quarter mile')
+    df1 = result_au_service(config, buf2_transit_stops_2050, 'half mile')
+    df2 = result_au_service(config, buf4_transit_stops_2050, 'quarter mile')
     df_service_dense = pd.concat([df1, df2])
 
     # save to output folder
-    utils.export_csv(df_service_dense, config, "transit_stops_density_intersect.csv", index=True)
+    utils.export_csv(df_service_dense, config, "transit_stops_density_intersect.csv")
 
     # 2. Intersection of transit stops and Equity Focus Areas ----
     gdf_parcel_efa = get_parcel_with_efa_pop(config)
         
-    df1 = get_pop_service_efa(config, gdf_parcel_efa, buf2_transit_stops_2050, 'half mile')
-    df2 = get_pop_service_efa(config, gdf_parcel_efa, buf4_transit_stops_2050, 'quarter mile')
+    df1 = result_efa_pop_service(gdf_parcel_efa, buf2_transit_stops_2050, 'half mile')
+    df2 = result_efa_pop_service(gdf_parcel_efa, buf4_transit_stops_2050, 'quarter mile')
     df_pop_service = pd.concat([df1, df2])
 
     # save to output folder

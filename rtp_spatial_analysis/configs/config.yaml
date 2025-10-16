@@ -1,9 +1,9 @@
-run_demo: false
-run_density_and_freight: false
-run_frequent_transit_routes_and_signal: false
-run_density_and_freight: false
+run_demo: true
+run_density_and_freight: true
+run_frequent_transit_routes_and_signal: true
+run_density_and_freight: true
 run_transit_stop_intersections: true
-run_paratransit_boundary: false
+run_paratransit_boundary: true
 
 # rtp_transit_data_path: C:/Users/cpeak/Puget Sound Regional Council/GIS - Sharing/Projects/Transportation/RTP_2026/transit
 rtp_transit_data_path: /GIS - Sharing/Projects/Transportation/RTP_2026/transit
