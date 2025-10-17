@@ -38,9 +38,11 @@ def export_layer(gdf, config, lyr_nm):
     """export to a pre-defined file location"""
     
     try: 
-        path_to_output = f"{config['user_onedrive']}/{config['rtp_output_path']}"
-        pth = Path(path_to_output, lyr_nm)
-        gdf.to_file(pth)
+        user_od = config['user_onedrive']
+        output_path = config['rtp_output_path']
+        gdb_name = config['rtp_output_gdb_name']
+        path_to_output = f"{user_od}/{output_path}/{gdb_name}"
+        gdf.to_file(path_to_output, layer=lyr_nm, driver="OpenFileGDB")
 
     except Exception as e:
         print(f"Error in export_layer: {e}")
@@ -49,9 +51,17 @@ def export_layer(gdf, config, lyr_nm):
 
 def export_csv(df, config, file_nm, index=False):
     """export to a pre-defined file location"""
-    path_to_output = f"{config['user_onedrive']}/{config['rtp_output_path']}"
-    pth = Path(path_to_output,file_nm)
-    df.to_csv(pth, index=index)
+
+    try: 
+        user_od = config['user_onedrive']
+        output_path = config['rtp_output_path']
+        path_to_output = f"{user_od}/{output_path}"
+        pth = Path(path_to_output,file_nm)
+        df.to_csv(pth, index=index)
+
+    except Exception as e:
+        print(f"Error in export_csv: {e}")
+        raise
 
 def get_onedrive_layer(config, path_name, layer):
     """

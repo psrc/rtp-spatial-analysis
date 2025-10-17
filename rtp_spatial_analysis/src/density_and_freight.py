@@ -4,24 +4,30 @@ import psrcelmerpy
 from pathlib import Path 
 import utils
 
-def combine_layers(line_layer, hex_layer):
+
+def buffer_and_combine(line_layer, hex_layer):
     """buffer a polyline layer and intersect it with hex_layer"""
+
     try:
-        buffered_gdf = utils.buffer_layer(line_layer, 500)
-        intersected = utils.intersect_layers(buffered_gdf, hex_layer)
+        buffered_gdf = buffer_layer(line_layer, 500)
+        intersected = intersect_layers(buffered_gdf, hex_layer)
         return intersected
+
     except Exception as e:
-        print(f"Error in combine_layers: {e}")
+        print(f"Error in buffer_and_combine: {e}")
         raise
 
 def export_shp(gdf):
     """export to a pre-defined file location"""
+
     try:
         pth = Path("C:/Users/cpeak/temp/rtp_spatial_analysis_exports/out_shape.shp")
         gdf.to_file(pth)
+
     except Exception as e:
         print(f"Error in export_shp: {e}")
         raise
+
 
 def sum_combined(gdf, config):
     """
@@ -49,7 +55,6 @@ def sum_combined(gdf, config):
         print(f"Error in sum_combined: {e}")
         raise
 
-    
 
 def run(config):
     """
@@ -63,7 +68,7 @@ def run(config):
 
         fgtswa = utils.get_onedrive_layer(config, 'fgtswa_path', 'FGTSWA')
         activity_units_2050 = utils.get_onedrive_layer(config, 'activity_units_path', 'peope_and_jobs_2050')
-        combined_gdf = combine_layers(fgtswa, activity_units_2050)
+        combined_gdf = buffer_and_combine(fgtswa, activity_units_2050)
 
         total_au = activity_units_2050.sum_au_205.sum()
         summed = sum_combined(combined_gdf, config)
