@@ -9,8 +9,8 @@ def buffer_and_combine(line_layer, hex_layer):
     """buffer a polyline layer and intersect it with hex_layer"""
 
     try:
-        buffered_gdf = buffer_layer(line_layer, 500)
-        intersected = intersect_layers(buffered_gdf, hex_layer)
+        buffered_gdf = utils.buffer_layer(line_layer, 500)
+        intersected = utils.intersect_layers(buffered_gdf, hex_layer)
         return intersected
 
     except Exception as e:
