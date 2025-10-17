@@ -3,6 +3,7 @@ import yaml
 from pathlib import Path
 import demo
 import density_and_freight
+import density_and_signals
 import frequent_transit_routes_and_signal
 import transit_stop_intersections
 import getpass
@@ -26,8 +27,13 @@ if config['run_demo']:
 if config['run_density_and_freight']:
     density_and_freight.run(config)
 
+<<<<<<< HEAD
+if config['run_density_and_signals']:
+    density_and_signals.run(config)
+=======
 if config['run_frequent_transit_routes_and_signal']:
     frequent_transit_routes_and_signal.run(config)
+>>>>>>> main
     
 if config['run_transit_stop_intersections']:
     transit_stop_intersections.run(config)
