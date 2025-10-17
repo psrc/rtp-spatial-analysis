@@ -10,6 +10,25 @@ transit_supportive_density = {'local':7,
                               'hct':40,
                               'brt':15}
 
+
+def get_buffered_transit_stops(config):
+    """
+    Get buffered transit stops for 2050 transit network
+    Returns:
+        buf2_transit_stops_2050: GeoDataFrame buffered 1/2 mile
+        buf4_transit_stops_2050: GeoDataFrame buffered 1/4 mile
+    """
+
+    # 2050 Transit Stops
+    transit_stops_2050 = utils.get_onedrive_layer(config, 'rtp_transit_network_path', 'Transit_Stops_2050')
+    transit_stops_2050 = transit_stops_2050.to_crs(2285)
+    
+    # buffer 1/4 and 1/2 mile
+    buf2_transit_stops_2050 = utils.buffer_layer(transit_stops_2050, config['mile_in_ft']/2)
+    buf4_transit_stops_2050 = utils.buffer_layer(transit_stops_2050, config['mile_in_ft']/4)
+
+    return buf2_transit_stops_2050, buf4_transit_stops_2050
+
 def cal_service_area_stat(df_total, df_within, pct_col_names):
     """
     get population or activity units within service area, outside service area, and percentage
@@ -151,37 +170,42 @@ def result_efa_pop_service(parcel, buffered_stops, buffer_name):
 
     return df
 
-def run(config):
+# 1. Intersection of transit stops and future density ----
+def run_transit_intesection_future_density(config):
 
-    # 2050 Transit Stops
-    transit_stops_2050 = utils.get_onedrive_layer(config, 'rtp_transit_network_path', 'Transit_Stops_2050')
-    transit_stops_2050 = transit_stops_2050.to_crs(2285)
-    
-    # buffer 1/4 and 1/2 mile
-    buf2_transit_stops_2050 = utils.buffer_layer(transit_stops_2050, config['mile_in_ft']/2)
-    buf4_transit_stops_2050 = utils.buffer_layer(transit_stops_2050, config['mile_in_ft']/4)
-    
-    # 1. Intersection of transit stops and future density ----
-    # get number of people and jobs that are in supportive densities with service and in those in supportive densities without service (Gap)
-    df1 = result_au_service(config, buf2_transit_stops_2050, 'half mile')
-    df2 = result_au_service(config, buf4_transit_stops_2050, 'quarter mile')
-    df_service_dense = pd.concat([df1, df2])
-
-    # save to output folder
-    utils.export_csv(df_service_dense, config, "transit_stops_density_intersect.csv")
-
-    # 2. Intersection of transit stops and Equity Focus Areas ----
-    gdf_parcel_efa = get_parcel_with_efa_pop(config)
+    try:
+        buf2_transit_stops_2050, buf4_transit_stops_2050 = get_buffered_transit_stops(config)
         
-    df1 = result_efa_pop_service(gdf_parcel_efa, buf2_transit_stops_2050, 'half mile')
-    df2 = result_efa_pop_service(gdf_parcel_efa, buf4_transit_stops_2050, 'quarter mile')
-    df_pop_service = pd.concat([df1, df2])
+        # get number of people and jobs that are in supportive densities with service and in those in supportive densities without service (Gap)
+        df1 = result_au_service(config, buf2_transit_stops_2050, 'half mile')
+        df2 = result_au_service(config, buf4_transit_stops_2050, 'quarter mile')
+        df_service_dense = pd.concat([df1, df2])
 
-    # save to output folder
-    utils.export_csv(df_pop_service, config, "transit_stops_efa_pop_intersect.csv")
+        # save to output folder
+        utils.export_csv(df_service_dense, config, "transit_stops_density_intersect.csv")
+        print(f"Finished intersection of transit stops and future density export")
+
+    except Exception as e:
+        print(f"Error in run_transit_intesection_future_density: {e}")
+        raise
+
+# 2. Intersection of transit stops and Equity Focus Areas ----
+def run_transit_intesection_efa(config):
+
+    try:
+        buf2_transit_stops_2050, buf4_transit_stops_2050 = get_buffered_transit_stops(config)
+
+        gdf_parcel_efa = get_parcel_with_efa_pop(config)
+            
+        df1 = result_efa_pop_service(gdf_parcel_efa, buf2_transit_stops_2050, 'half mile')
+        df2 = result_efa_pop_service(gdf_parcel_efa, buf4_transit_stops_2050, 'quarter mile')
+        df_pop_service = pd.concat([df1, df2])
+
+        # save to output folder
+        utils.export_csv(df_pop_service, config, "transit_stops_efa_pop_intersect.csv")
+        print(f"Finished intersection of transit stops and equity focus areas export")
+
+    except Exception as e:
+        print(f"Error in run_transit_intesection_efa: {e}")
+        raise
     
-    print ('done')
-
-
-
-

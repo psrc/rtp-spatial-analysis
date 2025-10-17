@@ -33,8 +33,11 @@ if config['run_density_and_signals']:
 if config['run_frequent_transit_routes_and_signal']:
     frequent_transit_routes_and_signal.run(config)
     
-if config['run_transit_stop_intersections']:
-    transit_stop_intersections.run(config)
+if config['run_transit_stop_intersect_future_density']:
+    transit_stop_intersections.run_transit_intesection_future_density(config)
+    
+if config['run_transit_stop_intersect_efa']:
+    transit_stop_intersections.run_transit_intesection_efa(config)
 
 if config['run_paratransit_boundary']:
     paratransit_bnd.run(config)    
