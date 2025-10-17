@@ -1,7 +1,7 @@
 run_demo: true
 run_density_and_freight: true
+run_density_and_signals: true
 run_frequent_transit_routes_and_signal: true
-run_density_and_freight: true
 run_transit_stop_intersections: true
 run_paratransit_boundary: true
 
