@@ -4,13 +4,6 @@ import psrcelmerpy
 from pathlib import Path 
 import utils
 
-transit_supportive_density = {'local':7,
-                              'all_day':15,
-                              'frequent':25,
-                              'hct':40,
-                              'brt':15}
-
-
 def get_buffered_transit_stops(config):
     """
     Get buffered transit stops for 2050 transit network
@@ -69,7 +62,7 @@ def result_au_service(config, buffered_stops, buffer_name):
     pct_cols = [i + '_pct' for i in total_col]
     data = {}
 
-    for key, density in transit_supportive_density.items():
+    for key, density in config['transit_supportive_density'].items():
 
         # number of people and jobs that are in supportive densities
         gdf_au = gdf[gdf['au_acre']>=density]
@@ -137,7 +130,7 @@ def get_parcel_with_efa_pop(config):
     return(gdf_parcel_efa)
 
 
-def result_efa_pop_service(parcel, buffered_stops, buffer_name):
+def result_efa_pop_service(config, parcel, buffered_stops, buffer_name):
 
     # list of efa column names
     efa_pop_cols = parcel.columns[parcel.columns.str.endswith('efa_pop')]
@@ -149,7 +142,7 @@ def result_efa_pop_service(parcel, buffered_stops, buffer_name):
     # dictionary to hold dataframes for each transit type
     data = {}
     # [loop through transit types] get population in each efa with service, without service, and total
-    for key in transit_supportive_density.keys():
+    for key in config['transit_supportive_density'].keys():
         
         # get buffered stops by transit type
         transit_by_type = buffered_stops[buffered_stops[key]>0]
@@ -197,8 +190,8 @@ def run_transit_intesection_efa(config):
 
         gdf_parcel_efa = get_parcel_with_efa_pop(config)
             
-        df1 = result_efa_pop_service(gdf_parcel_efa, buf2_transit_stops_2050, 'half mile')
-        df2 = result_efa_pop_service(gdf_parcel_efa, buf4_transit_stops_2050, 'quarter mile')
+        df1 = result_efa_pop_service(config, gdf_parcel_efa, buf2_transit_stops_2050, 'half mile')
+        df2 = result_efa_pop_service(config, gdf_parcel_efa, buf4_transit_stops_2050, 'quarter mile')
         df_pop_service = pd.concat([df1, df2])
 
         # save to output folder

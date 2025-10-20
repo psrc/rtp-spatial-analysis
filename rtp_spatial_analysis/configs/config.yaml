@@ -6,21 +6,30 @@ run_transit_stop_intersect_future_density: true
 run_transit_stop_intersect_efa: true
 run_paratransit_boundary: true
 
-# rtp_transit_data_path: C:/Users/cpeak/Puget Sound Regional Council/GIS - Sharing/Projects/Transportation/RTP_2026/transit
-rtp_transit_data_path: /GIS - Sharing/Projects/Transportation/RTP_2026/transit
-rtp_its_signals_path: /GIS - Sharing/Projects/Transportation/RTP_2026/its
-rtp_transit_network_path: /GIS - Sharing/Projects/Transportation/RTP_2026/transit/Transit_Network_2050_Scenario2b.gdb
-rtp_efa_path: GIS - Sharing/Projects/Transportation/RTP_2026/equity_focus_areas/efa_3groupings_1SD
-activity_units_path: /GIS - Sharing/Projects/Transportation/RTP_2026/activity_units/Activity_Units_2026_RTP.gdb
-fgtswa_path: /GIS - Sharing/Projects/Transportation/RTP_2026/freight/FGTSWA.gdb
-its_signals_path: /GIS - Sharing/Projects/Transportation/RTP_2026/its/ITS_Signals_2024_Final.gdb
-
+# ---- output paths ----
 rtp_output_path: /GIS - Sharing/Projects/Transportation/RTP_2026/future_system_output/
 rtp_output_gdb_name: future_system_output.gdb
 
+# ---- input paths ----
+rtp_transit_data_path: /GIS - Sharing/Projects/Transportation/RTP_2026/transit
+rtp_its_signals_path: /GIS - Sharing/Projects/Transportation/RTP_2026/its
+rtp_efa_path: GIS - Sharing/Projects/Transportation/RTP_2026/equity_focus_areas/efa_3groupings_1SD
+# gdb paths
+rtp_transit_network_path: /GIS - Sharing/Projects/Transportation/RTP_2026/transit/Transit_Network_2050_Scenario2b.gdb
+activity_units_path: /GIS - Sharing/Projects/Transportation/RTP_2026/activity_units/Activity_Units_2026_RTP.gdb
+fgtswa_path: /GIS - Sharing/Projects/Transportation/RTP_2026/freight/FGTSWA.gdb
+its_signals_path: /GIS - Sharing/Projects/Transportation/RTP_2026/its/ITS_Signals_2024_Final.gdb
+au_path: /GIS - Sharing/Projects/Transportation/RTP_2026/activity_units/parcel_data.gdb
+
+# ---- metrics ----
 mile_in_ft: 5280
 acre_in_sqft: 43560
 epsg_crs: 2285
 
-au_path: /GIS - Sharing/Projects/Transportation/RTP_2026/activity_units/parcel_data.gdb
-rtp_efa_path2: /GIS - Sharing/Projects/Transportation/RTP_2026/equity_focus_areas/efa_3groupings_1SD
+# ---- other specifications ----
+transit_supportive_density:
+  local: 7
+  all_day: 15
+  frequent: 25
+  hct: 40
+  brt: 15
