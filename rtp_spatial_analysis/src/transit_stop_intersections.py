@@ -66,16 +66,19 @@ def result_au_service(config, buffered_stops, buffer_name):
 
         # number of people and jobs that are in supportive densities
         gdf_au = gdf[gdf['au_acre']>=density]
+        # by county
         total_au = gdf_au.groupby('county', observed=False)[sum_fields].sum()
         total_au.columns = total_col
+        # region
+        total_au.loc['Region',:]=gdf_au[sum_fields].sum().to_list()
 
         transit_by_type = buffered_stops[buffered_stops[key]>0]
-        # gdf = gpd.clip(gdf_au, transit_by_type)
         gdf = gpd.clip(gdf_au, transit_by_type)
         df = gdf.drop(columns=['geometry'])
 
         within = df.groupby('county', observed=False)[sum_fields].sum().fillna(0)
         within.columns = total_col
+        within.loc['Region',:]=df[sum_fields].sum().to_list()
         # get activity units inside, outside, and total with percentage
         data[key] = cal_service_area_stat(total_au, within, pct_cols)
     
@@ -86,8 +89,12 @@ def result_au_service(config, buffered_stops, buffer_name):
     df['Buffer'] = buffer_name
     df = df[['county', 'Route Type', 'Buffer', 'Area'] + total_col + pct_cols].copy()
 
-    return df
+    df_county = df[df['county']!='Region'].copy()
+    df_region = df[df['county']=='Region'].copy()
 
+    df_final = pd.concat([df_region,df_county], ignore_index=True)
+
+    return df_final
 
 def get_parcel_with_efa_pop(config):
     # read population from parcel
@@ -138,6 +145,8 @@ def result_efa_pop_service(config, parcel, buffered_stops, buffer_name):
     pct_cols = efa_pop_cols.str.replace('_efa_pop', '_pct', regex=False).to_list()
     # total population in each efa
     efa_total_pop = parcel.groupby('county_name', observed=False)[efa_pop_cols].sum()
+    # region
+    efa_total_pop.loc['Region',:] = parcel[efa_pop_cols].sum().to_list()
     
     # dictionary to hold dataframes for each transit type
     data = {}
@@ -151,6 +160,8 @@ def result_efa_pop_service(config, parcel, buffered_stops, buffer_name):
         df = gdf.drop(columns=['geometry'])
         # total population in each efa with/without service
         within = df.groupby('county_name', observed=False)[efa_pop_cols].sum().fillna(0)
+        # region
+        within.loc['Region',:] = df[efa_pop_cols].sum().to_list()
         # get population inside, outside, and total with percentage
         data[key] = cal_service_area_stat(efa_total_pop, within, pct_cols)
 
@@ -161,7 +172,12 @@ def result_efa_pop_service(config, parcel, buffered_stops, buffer_name):
     df['Buffer'] = buffer_name
     df = df[['county_name', 'Route Type', 'Buffer', 'Area'] + efa_pop_cols.tolist() + pct_cols].copy()
 
-    return df
+    df_county = df[df['county_name']!='Region'].copy()
+    df_region = df[df['county_name']=='Region'].copy()
+
+    df_final = pd.concat([df_region,df_county], ignore_index=True)
+
+    return df_final
 
 # 1. Intersection of transit stops and future density ----
 def run_transit_intesection_future_density(config):
