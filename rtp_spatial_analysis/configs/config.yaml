@@ -5,6 +5,7 @@ run_frequent_transit_routes_and_signal: true
 run_transit_stop_intersect_future_density: true
 run_transit_stop_intersect_efa: true
 run_paratransit_boundary: true
+run_congestion_measures: true
 
 # ---- output paths ----
 rtp_output_path: /GIS - Sharing/Projects/Transportation/RTP_2026/future_system_output/
@@ -33,3 +34,4 @@ transit_supportive_density:
   frequent: 25
   hct: 40
   brt: 15
+ 2050_model_run_path: N:/rtp_2026_2050/scenarios_for_sept/sc_constrained_2050/soundcast
