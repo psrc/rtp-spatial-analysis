@@ -1,6 +1,6 @@
 
 run_demo: false
-run_density_and_freight: true
+run_density_and_freight: false
 run_transit_stop_intersections: false
 run_congestion_measures: true
 
