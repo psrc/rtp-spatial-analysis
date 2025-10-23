@@ -1,10 +1,10 @@
 run_demo: false
-run_density_and_freight: true
-run_density_and_signals: true
-run_frequent_transit_routes_and_signal: true
-run_transit_stop_intersect_future_density: true
-run_transit_stop_intersect_efa: true
-run_paratransit_boundary: true
+run_density_and_freight: false
+run_density_and_signals: false
+run_frequent_transit_routes_and_signal: false
+run_transit_stop_intersect_future_density: false
+run_transit_stop_intersect_efa: false
+run_paratransit_boundary: false
 run_congestion_measures: true
 
 # ---- output paths ----
@@ -34,4 +34,5 @@ transit_supportive_density:
   frequent: 25
   hct: 40
   brt: 15
- 2050_model_run_path: N:/rtp_2026_2050/scenarios_for_sept/sc_constrained_2050/soundcast
+
+2050_model_run_path: N:/rtp_2026_2050/scenarios_for_sept/sc_constrained_2050/soundcast
