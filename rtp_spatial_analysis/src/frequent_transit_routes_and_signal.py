@@ -4,61 +4,65 @@ from pathlib import Path
 import utils
 import pandas as pd
 
-
-def combine_layers(line_layer, hex_layer):
-    """buffer a polyline layer and intersect it with hex_layer"""
-    buffered_gdf = utils.buffer_layer(line_layer, 500)
-    intersected = utils.intersect_layers(buffered_gdf, hex_layer)
-    return intersected
-
-
 def run(config):
-    """retrieve fgts and activity units layers, and process them"""
-
-    eg_conn = psrcelmerpy.ElmerGeoConn()
-    cities = eg_conn.read_geolayer("cities")
-    cities = cities.to_crs(2285)
-
-    # opening frequent transit routes layer #
-    transit_path = f"{config['user_onedrive']}/{config['rtp_transit_data_path']}"
-    transit_routes = gpd.read_file(
-        Path(transit_path) / "Transit_Network_2050_Scenario2b.gdb",
-        layer="transit_routes_2050",
-        engine="fiona",
-    )
+    # OPENING FREQUENT TRANSIT ROUTES LAYER #
+    transit_routes = open_layer(config, 'rtp_transit_data_path', "Transit_Network_2050_Scenario2b.gdb", "transit_routes_2050")
     transit_routes_frequent = transit_routes[transit_routes["frequent"] == 1]
     transit_routes_frequent = transit_routes_frequent.to_crs(2285)
+
+    # print statements for testing #
+    transit_routes_frequent = transit_routes_frequent.reset_index(drop=True)
     print(transit_routes_frequent)
     print("transit routes done")
 
-    # layers = fiona.listlayers("C:/Users/ONg/PSRC/GIS - Sharing/Projects/Transportation/RTP_2026/its/ITS_Signals_2024_Final.gdb")
-    # print(layers)
-
-    # opening its signals layer #
-    signals_path = f"{config['user_onedrive']}/{config['rtp_its_signals_path']}"
-    signals = gpd.read_file(
-        Path(signals_path) / "ITS_Signals_2024_Final.gdb",
-        layer="ITS_Signals",
-        engine="fiona",
-    )
+    # OPENING ITS SIGNALS LAYER #
+    signals = open_layer(config, 'rtp_its_signals_path', "ITS_Signals_2024_Final.gdb", "ITS_Signals")
     signals = signals.to_crs(2285)
     signals.geometry = signals.geometry.buffer(100)
+
+    # print statements for testing #
     print(signals)
     print("signals done")
 
-    # combining frequent transit routes and signals #
+    # COMBINING FREQUENT TRANSIT ROUTES AND ITS SIGNALS INTO SHP FILE AND CSV OUTPUT#
+    signals_on_routes = combine_frequent_transit_and_signals(transit_routes_frequent, signals, config)
+    
+    # print statements for testing #
+    print(signals_on_routes)
+    print("combining done")
+
+    # SUMMARIZING TSP AND PEDESTRIAN SIGNAL COUNTS #
+    sum_yes_no(signals_on_routes, "tsp", "tsp_counts.csv", config)
+    sum_yes_no(signals_on_routes, "ped_signal", "ped_signal_counts.csv", config)
+    
+
+###########################################################################
+# Open Layer Function
+# Parameters: config dict, path key in config, gdb file name, layer name
+# Function: Opens a specified layer from a geodatabase file
+# Returns: geopandas dataframe
+############################################################################          
+def open_layer(config, path, gdb_path, layer):
+    path = f"{config['user_onedrive']}/{config[path]}"
+    layer_output = gpd.read_file(
+        Path(path) / gdb_path,
+        layer=layer,
+        engine="fiona",
+    )
+    return layer_output
+
+#############################################################################
+# Combine Frequent Transit Routes and Signals Function
+# Parameters: transit routes dataframe, signals dataframe, config dict  
+# Function: Spatially joins signals with frequent transit routes and exports results
+#           to shapefile and CSV
+# Returns: geopandas dataframe of signals on frequent transit routes
+###############################################################################
+def combine_frequent_transit_and_signals(transit_routes_frequent, signals, config):
     signals_on_routes = gpd.sjoin(
         signals, transit_routes_frequent, how="inner", predicate="intersects"
     )
     signals_on_routes = signals_on_routes.drop_duplicates(subset=signals.columns)
-
-    num_yes_tsp = (signals_on_routes["tsp"] == "Yes").sum()
-    num_no_tsp = (signals_on_routes["tsp"] == "No").sum()
-    count_rows(num_yes_tsp, num_no_tsp, "tsp_counts.csv", config)
-
-    num_yes_ped = (signals_on_routes["ped_signal"] == "Yes").sum()
-    num_no_ped = (signals_on_routes["ped_signal"] == "No").sum()
-    count_rows(num_yes_ped, num_no_ped, "ped_signal_counts.csv", config)
 
     utils.export_layer(
         signals_on_routes, config, "frequent_transit_routes_and_signal.shp"
@@ -66,13 +70,31 @@ def run(config):
     utils.export_csv(
         signals_on_routes, config, "frequent_transit_routes_and_signal.csv"
     )
-    print(signals_on_routes)
+    return signals_on_routes
 
+#############################################################################
+# Summarize Yes/No Counts Function
+# Parameters: layer dataframe, column name, csv file name, config dict
+# Function: Counts 'Yes' and 'No' values in a specified column and exports 
+#           results to CSV by calling count_rows function    
+# Returns: None
+###############################################################################
+def sum_yes_no(layer, column, csv_path, config):
+    num_yes = (layer[column] == "Yes").sum()
+    num_no = (layer[column] == "No").sum()
+    count_rows(num_yes, num_no, csv_path, column, config)
 
-def count_rows(num_yes, num_no, file_name, config):
-    # base_dir = Path(config['rtp_output_path']) / "frequent_transit_routes_signals_output"
-    # full_path = base_dir / file_name
-    counts_df = pd.DataFrame({"tsp": ["yes", "no"], "count": [num_yes, num_no]})
-    # Export to CSV
+    # print statements for testing #
+    print(f"Counts for {column}:")
+    print("yes:", num_yes)
+    print("no:", num_no)
+
+############################################################################
+# Count Rows Function
+# Parameters: number of yes, number of no, file name, column name, config dict
+# Function: Creates a dataframe with counts of 'Yes' and 'No' and exports to CSV
+# Returns: None
+############################################################################
+def count_rows(num_yes, num_no, file_name, column_name, config):
+    counts_df = pd.DataFrame({column_name: ["yes", "no"], "count": [num_yes, num_no]})
     utils.export_csv(counts_df, config, file_name)
-    # counts_df.to_csv(full_path, index=False)
