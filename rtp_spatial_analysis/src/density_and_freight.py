@@ -67,6 +67,7 @@ def run(config):
     try:
 
         fgtswa = utils.get_onedrive_layer(config, 'fgtswa_path', 'FGTSWA')
+        fgtswa = fgtswa[fgtswa['FGTSClass'].isin(['T-1', 'T-2'])]
         activity_units_2050 = utils.get_onedrive_layer(config, 'activity_units_path', 'peope_and_jobs_2050')
         combined_gdf = buffer_and_combine(fgtswa, activity_units_2050)
 
