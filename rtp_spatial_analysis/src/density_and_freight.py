@@ -29,7 +29,7 @@ def export_shp(gdf):
         raise
 
 
-def sum_combined(gdf, config):
+def sum_combined(gdf, au_col_name, config):
     """
     Get a sum of activity units in a geodataframe
     
@@ -41,7 +41,7 @@ def sum_combined(gdf, config):
     """
     try:
         c = gdf[['GRID_ID', 
-                'sum_au_205', 
+                au_col_name, 
                 'au_acre', 
                 'geometry']].copy()
 
@@ -56,6 +56,7 @@ def sum_combined(gdf, config):
         raise
 
 
+
 def run(config):
     """
     Get density within 500 feet of FGTS Routes
@@ -67,14 +68,23 @@ def run(config):
     try:
 
         fgtswa = utils.get_onedrive_layer(config, 'fgtswa_path', 'FGTSWA')
-        activity_units_2050 = utils.get_onedrive_layer(config, 'activity_units_path', 'peope_and_jobs_2050')
-        combined_gdf = buffer_and_combine(fgtswa, activity_units_2050)
+        fgtswa = fgtswa[fgtswa['FGTSClass'].isin(['T-1', 'T-2'])]
+        #activity_units_2050 = utils.get_onedrive_layer(config, 'activity_units_path', 'peope_and_jobs_2050')
 
-        total_au = activity_units_2050.sum_au_205.sum()
-        summed = sum_combined(combined_gdf, config)
+        au2050 = utils.get_onedrive_layer(config, 'activity_units_path', 'peope_and_jobs_2050')
+        combined_gdf = buffer_and_combine(fgtswa, au2050)
+        total_au_2050 = au2050.sum_au_205.sum()
+        summed_2050 = sum_combined(combined_gdf, 'sum_au_205', config)
+
+        au2024 = utils.get_onedrive_layer(config, 'activity_units_path', 'peope_and_jobs_2024')
+        combined_gdf = buffer_and_combine(fgtswa, au2024)
+        total_au_2024 = au2024.sum_au_202.sum()
+        summed_2024 = sum_combined(combined_gdf, 'sum_au_202', config)
+        
         df = pd.DataFrame({
             'selection': ['regional total', 'within 500 ft of FGTS routes'],
-            'activity units': [total_au, summed]
+            'activity units 2050': [total_au_2050, summed_2050],
+            'activity units 2024': [total_au_2024, summed_2024],
         })
         utils.export_csv(df, config, 'density_and_freight.csv')
         print(f"Finished Density and Freight export")
