@@ -22,7 +22,7 @@ def run(config):
     congested_model_links_gdf = model_links_gdf[model_links_gdf['ID'].isin(congested_links['ij'])]
     congested_fgts = congested_links[congested_links['@fgts'] > 0]
     congested_fgts = model_links_gdf[model_links_gdf['ID'].isin(congested_fgts['ij'])]
-    utils.export_layer(congested_fgts, config, "congested_fgts.shp")
+    utils.export_layer(congested_fgts, config, "congested_fgts")
 
     model_transit_segments = pd.read_csv(Path(config['2050_model_run_path'])/"outputs/transit/transit_segment_results.csv", dtype={'i_node': 'Int64', 'j_node': 'Int64'})
     model_transit_segments["i_node"].fillna(0).astype(int)
@@ -31,8 +31,23 @@ def run(config):
     
     model_transit_routes = gpd.read_file(Path(config['2050_model_run_path'])/"outputs/network/shapefile/emme_tlines.shp")
     congested_transit_routes = congested_transit_segments(congested_links, model_transit_segments, model_transit_routes) 
-    utils.export_layer(congested_model_links_gdf, config, "congested_links.shp")
+    utils.export_layer(congested_model_links_gdf, config, "congested_links")
   
+    signals_gdf = gpd.read_file(Path(f"{config['user_onedrive']}/{config['rtp_its_signals_path']}/ITS_Signals_2024_Final.gdb"), layer="its_signals")
+    signals_gdf = signals_gdf.to_crs(2285)
+    signals_gdf.geometry = signals_gdf.geometry.buffer(20)  # buffer 100 feet to ensure intersection   
+    print(signals_gdf)
+    print("signals done")
 
+    signals_in_congested_links_gdf = gpd.sjoin(
+        signals_gdf,
+        congested_model_links_gdf,
+        how="inner",
+        predicate="intersects"      
+    )
+    signals_in_congested_links_gdf=signals_in_congested_links_gdf.drop_duplicates(subset='OBJECTID')
+    
+    utils.export_layer(signals_in_congested_links_gdf, config, "congested_signals")
+       
     print('done')
 
