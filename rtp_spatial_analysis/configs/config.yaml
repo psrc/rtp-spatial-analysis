@@ -1,21 +1,12 @@
-<<<<<<< HEAD
 run_demo: false
 run_density_and_freight: false
+run_density_and_signals: false
 run_frequent_transit_routes_and_signal: false
-run_density_and_freight: false
-run_transit_stop_intersections: false
+run_transit_stop_intersect_future_density: false
+run_transit_stop_intersect_efa: false
 run_paratransit_boundary: false
+run_congestion_measures: false
 run_rcp_equity_analysis: true
-=======
-run_demo: true
-run_density_and_freight: true
-run_density_and_signals: true
-run_frequent_transit_routes_and_signal: true
-run_transit_stop_intersect_future_density: true
-run_transit_stop_intersect_efa: true
-run_paratransit_boundary: true
-run_congestion_measures: true
->>>>>>> 3af75d8fb6cf7e9dd6a014bd24a8cd212e47f56e
 
 # ---- output paths ----
 rtp_output_path: /GIS - Sharing/Projects/Transportation/RTP_2026/future_system_output/
@@ -29,19 +20,13 @@ rtp_efa_path: GIS - Sharing/Projects/Transportation/RTP_2026/equity_focus_areas/
 rtp_transit_network_path: /GIS - Sharing/Projects/Transportation/RTP_2026/transit/Transit_Network_2050_Scenario2b.gdb
 activity_units_path: /GIS - Sharing/Projects/Transportation/RTP_2026/activity_units/Activity_Units_2026_RTP.gdb
 fgtswa_path: /GIS - Sharing/Projects/Transportation/RTP_2026/freight/FGTSWA.gdb
-<<<<<<< HEAD
 rcp_path: /GIS - Sharing/Projects/Transportation/RTP_2026/regional_capacity_projects/rtp_projects_2026_scenario_2b
 # equity_path: /GIS - Sharing/Projects/Transportation/RTP_2026/equity_focus_areas/efa_3groupings_1SD 
 
-# OUTPUT PATH #
-rtp_output_path: /GIS - Sharing/Projects/Transportation/RTP_2026/future_system_output
-
-=======
 its_signals_path: /GIS - Sharing/Projects/Transportation/RTP_2026/its/ITS_Signals_2024_Final.gdb
 au_path: /GIS - Sharing/Projects/Transportation/RTP_2026/activity_units/parcel_data.gdb
 
 # ---- metrics ----
->>>>>>> 3af75d8fb6cf7e9dd6a014bd24a8cd212e47f56e
 mile_in_ft: 5280
 acre_in_sqft: 43560
 epsg_crs: 2285

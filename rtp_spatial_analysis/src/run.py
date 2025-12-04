@@ -9,6 +9,7 @@ import transit_stop_intersections
 import getpass
 import paratransit_bnd
 import congestion_measures
+import rcp_equity_analysis
 
 file = Path().joinpath(configuration.args.configs_dir, "config.yaml")
 
@@ -44,4 +45,7 @@ if config['run_paratransit_boundary']:
     paratransit_bnd.run(config)    
 
 if config['run_congestion_measures']:
-    congestion_measures.run(config)   
+    congestion_measures.run(config)  
+     
+if config['run_rcp_equity_analysis']:
+    rcp_equity_analysis.run(config)
