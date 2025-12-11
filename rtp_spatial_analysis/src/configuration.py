@@ -8,13 +8,15 @@ def add_run_args(parser, multiprocess=True):
     parser.add_argument('-c', '--configs_dir',
                         type=Path,
                         metavar='PATH',
-                        default=Path(__file__).absolute().parent,
+                        default=Path(__file__).absolute().parent.parent.joinpath('configs'),
                         help='path to configs dir')
 
 
-
-# if __name__ == '__main__':
+# Parse args at module level so they're available when imported
 parser = argparse.ArgumentParser()
 add_run_args(parser)
-# add_user_args(parser)
-args = parser.parse_args()
+args, _ = parser.parse_known_args()
+
+
+if __name__ == '__main__':
+    print(f"configs_dir: {args.configs_dir}")

@@ -1,7 +1,7 @@
 import geopandas as gpd
 import psrcelmerpy
 from pathlib import Path
-import utils
+from . import utils
 import pandas as pd
 
 

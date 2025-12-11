@@ -15,18 +15,13 @@ documentation for details.
    :maxdepth: 2
    :caption: Contents:
 
+   modules
+
 This project contains several scripts that overlay and summarize projects
 for the 2026 RTP. 
 
-Density and Freight  
--------------------
 
-The Density and Freight analysis can be run by setting `run_density_and_freight` to `True`.
-See ./rtp_spatial_analysis/configs/config.yaml for this setting. 
 
-Then run the script as so, from the root directory of this repo::
-
-   python .\rtp_spatial_analysis\src\run.py -c rtp_spatial_analysis\configs 
 
 Some other subheading
 ---------------------
