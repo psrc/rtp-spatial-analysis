@@ -34,7 +34,6 @@ rtp\_spatial\_analysis.src.density\_and\_freight module
 .. automodule:: rtp_spatial_analysis.src.density_and_freight
    :members:
    :show-inheritance:
-   :undoc-members:
 
 rtp\_spatial\_analysis.src.density\_and\_signals module
 -------------------------------------------------------
