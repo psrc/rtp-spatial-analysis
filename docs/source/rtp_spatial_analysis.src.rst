@@ -26,7 +26,6 @@ rtp\_spatial\_analysis.src.demo module
 .. automodule:: rtp_spatial_analysis.src.demo
    :members:
    :show-inheritance:
-   :undoc-members:
 
 rtp\_spatial\_analysis.src.density\_and\_freight module
 -------------------------------------------------------
