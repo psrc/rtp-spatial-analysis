@@ -2,13 +2,16 @@ import geopandas as gpd
 import pandas as pd
 import psrcelmerpy
 from pathlib import Path 
-import utils
+from . import utils
 
 def get_buffered_transit_stops(config):
     """
     Get buffered transit stops for 2050 transit network
+
     Returns:
+
         buf2_transit_stops_2050: GeoDataFrame buffered 1/2 mile
+
         buf4_transit_stops_2050: GeoDataFrame buffered 1/4 mile
     """
 

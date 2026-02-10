@@ -9,7 +9,7 @@
             "name": "Python Debugger: Current File",
             "type": "debugpy",
             "request": "launch",
-            "program": "rtp_spatial_analysis/src/run.py",
+            "module": "rtp_spatial_analysis.src.run",
             "console": "integratedTerminal",
             "args": ["-c", "rtp_spatial_analysis/configs"]
         }

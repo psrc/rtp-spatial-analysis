@@ -1,0 +1,21 @@
+[project]
+name = "rtp-spatial-analysis"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "geopandas>=1.1.1",
+    "pandas>=2.3.3",
+    "pathlib>=1.0.1",
+    "psrcelmerpy",
+    "pyyaml>=6.0.3",
+]
+
+[dependency-groups]
+dev = [
+    "sphinx>=9.0.1",
+]
+
+[tool.uv.sources]
+psrcelmerpy = { git = "https://github.com/psrc/psrcelmerpy.git" }
